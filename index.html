@@ -10,12 +10,6 @@
             max-width: 800px;
             margin: auto;
         }
-        .college-banner {
-            width: 100%;
-            max-height: 150px;
-            object-fit: contain;
-            margin-bottom: 20px;
-        }
         .banner {
             background-color: #2c3e50;
             color: white;
@@ -135,9 +129,6 @@
     </style>
 </head>
 <body>
-    <!-- College Banner Image -->
-    <img src="http://www.smce.ac.in/static/media/mittapalliheader.9a72c2349509e55769bc.png" alt="Sri Mittapalli College of Engineering" class="college-banner">
-
     <!-- Project Banner -->
     <div class="banner">
         <h1>Liver Disease Prediction Using Machine Learning</h1>
@@ -214,15 +205,31 @@
         function checkLiverDisease() {
             // Get input values
             const inputs = {
-                age: parseFloat(document.getElementById('age').value),
-                gender: parseInt(document.getElementById('gender').value),
-                total_bilirubin: parseFloat(document.getElementById('total_bilirubin').value),
-                direct_bilirubin: parseFloat(document.getElementById('direct_bilirubin').value),
-                alkaline_phosphotase: parseFloat(document.getElementById('alkaline_phosphotase').value),
-                alamine_aminotransferase: parseFloat(document.getElementById('alamine_aminotransferase').value),
-                aspartate_aminotransferase: parseFloat(document.getElementById('aspartate_aminotransferase').value),
-                albumin: parseFloat(document.getElementById('albumin').value)
+                age: document.getElementById('age').value,
+                gender: document.getElementById('gender').value,
+                total_bilirubin: document.getElementById('total_bilirubin').value,
+                direct_bilirubin: document.getElementById('direct_bilirubin').value,
+                alkaline_phosphotase: document.getElementById('alkaline_phosphotase').value,
+                alamine_aminotransferase: document.getElementById('alamine_aminotransferase').value,
+                aspartate_aminotransferase: document.getElementById('aspartate_aminotransferase').value,
+                albumin: document.getElementById('albumin').value
             };
+
+            // Validate inputs
+            for (const key in inputs) {
+                if (inputs[key] === '' || isNaN(inputs[key])) {
+                    document.getElementById('result').innerHTML = `
+                        <h3 style="color: #e74c3c;">Invalid Input!</h3>
+                        <p>Please enter valid numbers for all fields.</p>
+                    `;
+                    return; // Stop execution if any input is invalid
+                }
+            }
+
+            // Convert inputs to numbers
+            for (const key in inputs) {
+                inputs[key] = parseFloat(inputs[key]);
+            }
 
             // Clear previous results
             document.getElementById('result').innerHTML = '';
