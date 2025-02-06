@@ -3,12 +3,76 @@
 <head>
     <title>Liver Disease Predictor</title>
     <style>
-        body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin: 10px 0; }
-        input { padding: 8px; width: 100%; }
-        button { padding: 10px 20px; background: #4CAF50; color: white; border: none; cursor: pointer; }
-        #result { margin-top: 20px; padding: 15px; border-radius: 5px; background: #f0f0f0; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #34495e;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+        .instructions {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        .comparison {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .comparison-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-left: 4px solid #3498db;
+            background-color: #f9f9f9;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -16,7 +80,8 @@
     
     <div class="input-group">
         <label>Age:</label>
-        <input type="number" id="age" step="0.1">
+        <input type="number" id="age" step="0.1" placeholder="Enter your age">
+        <div class="instructions">Any positive number (e.g., 45)</div>
     </div>
     
     <div class="input-group">
@@ -25,41 +90,49 @@
             <option value="0">Female</option>
             <option value="1">Male</option>
         </select>
+        <div class="instructions">Enter 0 for Female, 1 for Male</div>
     </div>
     
     <div class="input-group">
-        <label>Total Bilirubin (≤1.2):</label>
-        <input type="number" id="total_bilirubin" step="0.1">
+        <label>Total Bilirubin:</label>
+        <input type="number" id="total_bilirubin" step="0.1" placeholder="Enter Total Bilirubin">
+        <div class="instructions">Should be ≤1.2 for normal (e.g., 0.8)</div>
     </div>
     
     <div class="input-group">
-        <label>Direct Bilirubin (≤0.4):</label>
-        <input type="number" id="direct_bilirubin" step="0.1">
+        <label>Direct Bilirubin:</label>
+        <input type="number" id="direct_bilirubin" step="0.1" placeholder="Enter Direct Bilirubin">
+        <div class="instructions">Should be ≤0.4 for normal (e.g., 0.2)</div>
     </div>
     
     <div class="input-group">
-        <label>Alkaline Phosphatase (≤120):</label>
-        <input type="number" id="alkaline_phosphotase">
+        <label>Alkaline Phosphatase:</label>
+        <input type="number" id="alkaline_phosphotase" placeholder="Enter Alkaline Phosphatase">
+        <div class="instructions">Should be ≤120 for normal (e.g., 85)</div>
     </div>
     
     <div class="input-group">
-        <label>Alamine Aminotransferase (≤40):</label>
-        <input type="number" id="alamine_aminotransferase">
+        <label>Alamine Aminotransferase:</label>
+        <input type="number" id="alamine_aminotransferase" placeholder="Enter Alamine Aminotransferase">
+        <div class="instructions">Should be ≤40 for normal (e.g., 30)</div>
     </div>
     
     <div class="input-group">
-        <label>Aspartate Aminotransferase (≤40):</label>
-        <input type="number" id="aspartate_aminotransferase">
+        <label>Aspartate Aminotransferase:</label>
+        <input type="number" id="aspartate_aminotransferase" placeholder="Enter Aspartate Aminotransferase">
+        <div class="instructions">Should be ≤40 for normal (e.g., 35)</div>
     </div>
     
     <div class="input-group">
-        <label>Albumin (≥3.5):</label>
-        <input type="number" id="albumin" step="0.1">
+        <label>Albumin:</label>
+        <input type="number" id="albumin" step="0.1" placeholder="Enter Albumin">
+        <div class="instructions">Should be ≥3.5 for normal (e.g., 4.0)</div>
     </div>
     
     <button onclick="checkLiverDisease()">Check Result</button>
     
     <div id="result"></div>
+    <div id="comparison" class="comparison"></div>
 
     <script>
         function checkLiverDisease() {
@@ -75,36 +148,59 @@
                 albumin: parseFloat(document.getElementById('albumin').value)
             };
 
+            // Clear previous results
+            document.getElementById('result').innerHTML = '';
+            document.getElementById('comparison').innerHTML = '';
+
             // Check liver disease logic
             let reasons = [];
-            
-            if (inputs.total_bilirubin > 1.2) 
-                reasons.push("Total Bilirubin is high (>1.2)");
-            if (inputs.direct_bilirubin > 0.4) 
-                reasons.push("Direct Bilirubin is high (>0.4)");
-            if (inputs.alkaline_phosphotase > 120) 
-                reasons.push("Alkaline Phosphatase is high (>120)");
-            if (inputs.alamine_aminotransferase > 40) 
-                reasons.push("Alamine Aminotransferase is high (>40)");
-            if (inputs.aspartate_aminotransferase > 40) 
-                reasons.push("Aspartate Aminotransferase is high (>40)");
-            if (inputs.albumin < 3.5) 
-                reasons.push("Albumin is low (<3.5)");
+            const comparisonDiv = document.getElementById('comparison');
 
-            // Display result
-            const resultDiv = document.getElementById('result');
-            if (reasons.length > 0) {
-                resultDiv.innerHTML = `
-                    <h3 style="color: red;">Liver Disease Detected!</h3>
-                    <p>Reasons:</p>
-                    <ul>${reasons.map(reason => `<li>${reason}</li>`).join('')}</ul>
-                `;
-            } else {
-                resultDiv.innerHTML = `
-                    <h3 style="color: green;">No Liver Disease Detected!</h3>
-                    <p>All values are within normal ranges.</p>
-                `;
-            }
+            // Compare each input with normal ranges
+            const comparisons = [
+                { name: 'Total Bilirubin', value: inputs.total_bilirubin, normal: '≤1.2', condition: inputs.total_bilirubin > 1.2 },
+                { name: 'Direct Bilirubin', value: inputs.direct_bilirubin, normal: '≤0.4', condition: inputs.direct_bilirubin > 0.4 },
+                { name: 'Alkaline Phosphatase', value: inputs.alkaline_phosphotase, normal: '≤120', condition: inputs.alkaline_phosphotase > 120 },
+                { name: 'Alamine Aminotransferase', value: inputs.alamine_aminotransferase, normal: '≤40', condition: inputs.alamine_aminotransferase > 40 },
+                { name: 'Aspartate Aminotransferase', value: inputs.aspartate_aminotransferase, normal: '≤40', condition: inputs.aspartate_aminotransferase > 40 },
+                { name: 'Albumin', value: inputs.albumin, normal: '≥3.5', condition: inputs.albumin < 3.5 }
+            ];
+
+            // Animate the comparison process
+            comparisons.forEach((item, index) => {
+                setTimeout(() => {
+                    const comparisonItem = document.createElement('div');
+                    comparisonItem.className = 'comparison-item';
+                    comparisonItem.innerHTML = `
+                        <strong>${item.name}:</strong> ${item.value} (Normal: ${item.normal})
+                        <span style="color: ${item.condition ? '#e74c3c' : '#27ae60'};">
+                            ${item.condition ? '❌ Abnormal' : '✅ Normal'}
+                        </span>
+                    `;
+                    comparisonDiv.appendChild(comparisonItem);
+
+                    if (item.condition) {
+                        reasons.push(`${item.name} is ${item.condition ? 'abnormal' : 'normal'}`);
+                    }
+                }, index * 500); // Delay each comparison by 500ms
+            });
+
+            // Display final result after all comparisons
+            setTimeout(() => {
+                const resultDiv = document.getElementById('result');
+                if (reasons.length > 0) {
+                    resultDiv.innerHTML = `
+                        <h3 style="color: #e74c3c;">Liver Disease Detected!</h3>
+                        <p>Reasons:</p>
+                        <ul>${reasons.map(reason => `<li>${reason}</li>`).join('')}</ul>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <h3 style="color: #27ae60;">No Liver Disease Detected!</h3>
+                        <p>All values are within normal ranges.</p>
+                    `;
+                }
+            }, comparisons.length * 500); // Wait for all comparisons to finish
         }
     </script>
 </body>
