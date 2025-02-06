@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Liver Disease Predictor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Ensures proper mobile scaling -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,42 +21,49 @@
         }
         .banner h1 {
             margin: 0;
-            font-size: 20px; /* Adjusted to fit in one line */
+            font-size: 22px; /* Adjusted for better readability */
             font-weight: bold;
+            line-height: 1.3; /* Improved line spacing */
         }
         .banner p {
             margin: 5px 0;
             font-size: 14px;
+            line-height: 1.5; /* Improved line spacing */
         }
         h2 {
             color: #2c3e50;
             text-align: center;
+            font-size: 24px; /* Larger for better hierarchy */
+            margin-bottom: 20px;
         }
         .input-group {
             margin-bottom: 20px;
         }
         label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px; /* Increased spacing */
             color: #34495e;
             font-weight: bold;
+            font-size: 16px; /* Larger for better readability */
         }
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px; /* Increased height */
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 16px; /* Larger font for better readability */
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
         }
         button {
             width: 100%;
-            padding: 12px;
+            padding: 14px; /* Increased height */
             background-color: #3498db;
             color: white;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 18px; /* Larger font for better readability */
             cursor: pointer;
+            margin-top: 10px; /* Added spacing */
         }
         button:hover {
             background-color: #2980b9;
@@ -66,11 +74,13 @@
             border-radius: 5px;
             background-color: #ecf0f1;
             color: #2c3e50;
+            font-size: 16px; /* Larger font for better readability */
         }
         .instructions {
             font-size: 14px;
             color: #7f8c8d;
             margin-top: 5px;
+            line-height: 1.4; /* Improved line spacing */
         }
         .comparison {
             margin-top: 20px;
@@ -85,6 +95,7 @@
             border-left: 4px solid #3498db;
             background-color: #f9f9f9;
             animation: fadeIn 0.5s ease-in-out;
+            font-size: 16px; /* Larger font for better readability */
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -107,23 +118,34 @@
         }
         .status {
             margin-top: 10px;
-            font-size: 14px;
+            font-size: 16px; /* Larger font for better readability */
             color: #7f8c8d;
         }
 
-        /* Responsive Design */
+        /* Responsive Design for Mobile */
         @media (max-width: 600px) {
             .banner h1 {
-                font-size: 18px; /* Smaller font for mobile */
+                font-size: 20px; /* Slightly smaller for mobile */
             }
             .banner p {
-                font-size: 12px; /* Smaller font for mobile */
+                font-size: 13px; /* Slightly smaller for mobile */
             }
             h2 {
-                font-size: 20px; /* Smaller font for mobile */
+                font-size: 22px; /* Slightly smaller for mobile */
             }
-            input, select, button {
-                font-size: 14px; /* Smaller font for mobile */
+            label {
+                font-size: 15px; /* Slightly smaller for mobile */
+            }
+            input, select {
+                font-size: 15px; /* Slightly smaller for mobile */
+                padding: 10px; /* Slightly smaller for mobile */
+            }
+            button {
+                font-size: 16px; /* Slightly smaller for mobile */
+                padding: 12px; /* Slightly smaller for mobile */
+            }
+            #result, .comparison-item, .status {
+                font-size: 15px; /* Slightly smaller for mobile */
             }
         }
     </style>
