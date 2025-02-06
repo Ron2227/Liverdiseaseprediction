@@ -1,3 +1,111 @@
-git add index.html
-git commit -m "Add frontend for liver disease prediction"
-git push origin main
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liver Disease Predictor</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin: 10px 0; }
+        input { padding: 8px; width: 100%; }
+        button { padding: 10px 20px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        #result { margin-top: 20px; padding: 15px; border-radius: 5px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h2>Liver Disease Prediction</h2>
+    
+    <div class="input-group">
+        <label>Age:</label>
+        <input type="number" id="age" step="0.1">
+    </div>
+    
+    <div class="input-group">
+        <label>Gender:</label>
+        <select id="gender">
+            <option value="0">Female</option>
+            <option value="1">Male</option>
+        </select>
+    </div>
+    
+    <div class="input-group">
+        <label>Total Bilirubin (≤1.2):</label>
+        <input type="number" id="total_bilirubin" step="0.1">
+    </div>
+    
+    <div class="input-group">
+        <label>Direct Bilirubin (≤0.4):</label>
+        <input type="number" id="direct_bilirubin" step="0.1">
+    </div>
+    
+    <div class="input-group">
+        <label>Alkaline Phosphatase (≤120):</label>
+        <input type="number" id="alkaline_phosphotase">
+    </div>
+    
+    <div class="input-group">
+        <label>Alamine Aminotransferase (≤40):</label>
+        <input type="number" id="alamine_aminotransferase">
+    </div>
+    
+    <div class="input-group">
+        <label>Aspartate Aminotransferase (≤40):</label>
+        <input type="number" id="aspartate_aminotransferase">
+    </div>
+    
+    <div class="input-group">
+        <label>Albumin (≥3.5):</label>
+        <input type="number" id="albumin" step="0.1">
+    </div>
+    
+    <button onclick="checkLiverDisease()">Check Result</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function checkLiverDisease() {
+            // Get input values
+            const inputs = {
+                age: parseFloat(document.getElementById('age').value),
+                gender: parseInt(document.getElementById('gender').value),
+                total_bilirubin: parseFloat(document.getElementById('total_bilirubin').value),
+                direct_bilirubin: parseFloat(document.getElementById('direct_bilirubin').value),
+                alkaline_phosphotase: parseFloat(document.getElementById('alkaline_phosphotase').value),
+                alamine_aminotransferase: parseFloat(document.getElementById('alamine_aminotransferase').value),
+                aspartate_aminotransferase: parseFloat(document.getElementById('aspartate_aminotransferase').value),
+                albumin: parseFloat(document.getElementById('albumin').value)
+            };
+
+            // Check liver disease logic
+            let reasons = [];
+            
+            if (inputs.total_bilirubin > 1.2) 
+                reasons.push("Total Bilirubin is high (>1.2)");
+            if (inputs.direct_bilirubin > 0.4) 
+                reasons.push("Direct Bilirubin is high (>0.4)");
+            if (inputs.alkaline_phosphotase > 120) 
+                reasons.push("Alkaline Phosphatase is high (>120)");
+            if (inputs.alamine_aminotransferase > 40) 
+                reasons.push("Alamine Aminotransferase is high (>40)");
+            if (inputs.aspartate_aminotransferase > 40) 
+                reasons.push("Aspartate Aminotransferase is high (>40)");
+            if (inputs.albumin < 3.5) 
+                reasons.push("Albumin is low (<3.5)");
+
+            // Display result
+            const resultDiv = document.getElementById('result');
+            if (reasons.length > 0) {
+                resultDiv.innerHTML = `
+                    <h3 style="color: red;">Liver Disease Detected!</h3>
+                    <p>Reasons:</p>
+                    <ul>${reasons.map(reason => `<li>${reason}</li>`).join('')}</ul>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <h3 style="color: green;">No Liver Disease Detected!</h3>
+                    <p>All values are within normal ranges.</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
