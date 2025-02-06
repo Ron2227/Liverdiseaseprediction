@@ -73,6 +73,26 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        .loading-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .loading-progress {
+            width: 0;
+            height: 100%;
+            background-color: #3498db;
+            border-radius: 5px;
+            transition: width 0.5s ease-in-out;
+        }
+        .status {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
     </style>
 </head>
 <body>
@@ -132,6 +152,12 @@
     <button onclick="checkLiverDisease()">Check Result</button>
     
     <div id="result"></div>
+    <div id="loading" style="display: none;">
+        <div class="loading-bar">
+            <div class="loading-progress" id="loading-progress"></div>
+        </div>
+        <div class="status" id="loading-status">Analysing information...</div>
+    </div>
     <div id="comparison" class="comparison"></div>
 
     <script>
@@ -152,6 +178,25 @@
             document.getElementById('result').innerHTML = '';
             document.getElementById('comparison').innerHTML = '';
 
+            // Show loading bar
+            document.getElementById('loading').style.display = 'block';
+            const loadingProgress = document.getElementById('loading-progress');
+            const loadingStatus = document.getElementById('loading-status');
+
+            // Simulate analysis progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                loadingProgress.style.width = `${progress}%`;
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    loadingStatus.textContent = 'Analysis complete!';
+                    showResults(inputs);
+                }
+            }, 300); // Update progress every 300ms
+        }
+
+        function showResults(inputs) {
             // Check liver disease logic
             let reasons = [];
             const comparisonDiv = document.getElementById('comparison');
@@ -166,7 +211,7 @@
                 { name: 'Albumin', value: inputs.albumin, normal: '≥3.5', condition: inputs.albumin < 3.5 }
             ];
 
-            // Animate the comparison process
+            // Display comparison results
             comparisons.forEach((item, index) => {
                 setTimeout(() => {
                     const comparisonItem = document.createElement('div');
@@ -174,7 +219,7 @@
                     comparisonItem.innerHTML = `
                         <strong>${item.name}:</strong> ${item.value} (Normal: ${item.normal})
                         <span style="color: ${item.condition ? '#e74c3c' : '#27ae60'};">
-                            ${item.condition ? '❌ Abnormal' : '✅ Normal'}
+                            ${item.condition ? 'Abnormal' : 'Normal'}
                         </span>
                     `;
                     comparisonDiv.appendChild(comparisonItem);
